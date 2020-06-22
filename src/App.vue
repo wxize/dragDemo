@@ -13,6 +13,9 @@ export default {
   components: {
     myMenu,
     myStage
+  },
+  mounted() {
+    
   }
 }
 </script>

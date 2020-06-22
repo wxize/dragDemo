@@ -21,11 +21,11 @@ export default {
       items: [
         {
           label: '按钮',
-          element: 'el-button'
+          element: 'el-button',
         },
         {
           label: '行',
-          element: 'stage',
+          element: 'container',
           renderTag: 'el-row'
         }
       ],
