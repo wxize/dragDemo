@@ -4,18 +4,22 @@
     v-bind="conf"
     :tag="tag"
     :id="id"
+    @clone="cloneHandler"
     @add="addHandler"
     @change="changeHandler"
+    @choose="chooseHandler"
   >
-    <template v-for="(item,index) in children">
+    <template v-for="(item, index) in children">
       <component 
         :is="item.element" 
         :key="index" 
         :tag="item.renderTag" 
         :children="item.children"
         :id="item.id"
+        @clone="cloneHandler"
         @add="addHandler"
         @change="changeHandler"
+        @choose="chooseHandler"
         >{{item.label}}
       </component>
     </template>
@@ -44,7 +48,11 @@ export default {
         },
         children: {
             type: Array,
-            default: () => []
+            default: () => [],
+            validator(val) {
+                console.log('children ~', val)
+                return true
+            }
         }
     },
 
@@ -71,6 +79,14 @@ export default {
         
         addHandler(evt) {
             this.$emit('add', evt)
+        },
+
+        cloneHandler(evt) {
+            this.$emit('close', evt)
+        },
+
+        chooseHandler(evt) {
+            this.$emit('choose', evt)
         }
     }
 }

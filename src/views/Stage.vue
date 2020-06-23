@@ -5,6 +5,8 @@
     :children="sData.children"
     @change="changeHandler"
     @add="addHandler"
+    @clone="cloneHandler"
+    @choose="chooseHandler"
   ></container>
 </template>
 
@@ -80,11 +82,11 @@ export default {
     },
 
     changeHandler(evt) {
-
+      if (this) return
       // if (evt.removed) {
       //   this.ctrl = evt.removed.element
       // }
-
+      console.log(`change handler ~`)
       // add
       if (evt.added) {
         this.$store.state.selected = {
@@ -96,7 +98,7 @@ export default {
     },
 
     addHandler(evt) {
-      
+      if (this) return
       console.log('目标', evt)
       // 添加到哪
       // 获取到目标对象 
@@ -104,14 +106,22 @@ export default {
       // 获取当前目标对象的数据
       let node = this.query(evt.to.id)
       console.log(`找到的对象`, node)
+
+      if (!node) {
+        throw new Error('没有找到目标对象容器')
+      }
       
       const selected = Object.assign({}, this.$store.state.selected)
       console.log('要添加的对象 ...', selected)
-       
+      let ops = {}
+      if (selected.element == 'container' && !selected.children) {
+        ops = { children: [] }
+      }
+
       node.children.splice(
         selected.pos,
         1,
-        selected
+        Object.assign(ops, selected)
       )
 
       this.$store.state.page = Object.assign(
@@ -130,6 +140,27 @@ export default {
       this.$forceUpdate()
     },
 
+    cloneHandler(evt) {
+      console.log(`clone handler ~`)
+      console.log(evt)
+    },
+
+    chooseHandler(evt) {
+      console.log(evt)
+      let conf = evt.item.__vue__.$props
+      let list = []
+      for(let key in conf) {
+          list.push({
+              name: key,
+              value: conf[key]
+          })
+      }
+
+      // this.$store.state.setting = list
+
+      this.$emit('sync-setting', list)
+    },
+
     query(id = '', page = this.$store.state.page) {
       if(id == '') {
         throw new Error('参数错误')
@@ -140,7 +171,7 @@ export default {
       }
 
       if (page.children) {
-        page.children.find(item => {
+        return page.children.find(item => {
           return this.query(id, item)
         })
       }

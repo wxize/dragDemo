@@ -1,21 +1,33 @@
 <template>
   <div id="app">
     <myMenu></myMenu>
-    <myStage></myStage>
+    <myStage @sync-setting="syncSetting"></myStage>
+    <mySetting :conf="setting"></mySetting>
   </div>
 </template>
 
 <script>
 import myMenu from './views/Menus'
 import myStage from './views/Stage'
+import mySetting from './views/Setting'
 export default {
   name: 'app',
   components: {
     myMenu,
-    myStage
+    myStage,
+    mySetting
   },
-  mounted() {
-    
+
+  data() {
+    return {
+      setting: []
+    }
+  },
+  
+  methods: {
+    syncSetting(evt) {
+      this.setting = evt
+    }
   }
 }
 </script>

@@ -10,7 +10,8 @@ export default new Vuex.Store({
       tag: '',
       children: []
     },
-    selected: null
+    selected: null,
+    setting: []
   },
   mutations: {
   },

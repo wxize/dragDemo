@@ -1,6 +1,9 @@
 <template>
   <div style="width: 300px; background-color: gray;">
-      <draggable v-model="items" v-bind="conf" 
+      <draggable 
+        :list="items" 
+        v-bind="conf"
+        :clone="cloneHandler"
         @change="change"
       >
         <template v-for="(item, index) in items">
@@ -12,6 +15,7 @@
 
 <script>
 import draggable from 'vuedraggable'
+import shortid from 'shortid'
 export default {
   components: {
     draggable
@@ -26,7 +30,8 @@ export default {
         {
           label: '行',
           element: 'container',
-          renderTag: 'el-row'
+          renderTag: 'el-row',
+          children: []
         }
       ],
       conf: {
@@ -41,6 +46,17 @@ export default {
   methods: {
     change(evt) {
       console.log(evt)
+    },
+
+    cloneHandler(evt) {
+      console.log(`menus -> clone handler -> `, evt)
+      if (evt.children) {
+        evt.children = []
+      }
+      return {
+        ...evt,
+        id: shortid.generate()
+      }
     }
   }
 }
